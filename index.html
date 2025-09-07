@@ -778,11 +778,31 @@
       `;
       modal.classList.add("show"); modal.setAttribute("aria-hidden", "false");
     }
-    function closeModal() { modal.classList.remove("show"); modal.setAttribute("aria-hidden", "true"); currentJobId = null; }
-    closeModalBtn.onclick = closeModal; modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
-    document.addEventListener("keydown", e => { if (e.key === "Escape" && modal.classList.contains("show")) closeModal(); });
-    modalApply.onclick = () => { if (currentJobId == null) return; alert("สมัครตำแหน่ง ID: " + currentJobId); closeModal(); };
-    modalSave.onclick = () => { if (currentJobId == null) return; state.bookmarks.has(currentJobId) ? state.bookmarks.delete(currentJobId) : state.bookmarks.add(currentJobId); render(); closeModal(); };
+    function closeModal() {
+  modal.classList.remove("show");
+  modal.setAttribute("aria-hidden", "true");
+  currentJobId = null;
+}
+
+closeModalBtn.onclick = closeModal;
+modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && modal.classList.contains("show")) closeModal();
+});
+
+// สมัครงาน: แค่แจ้งเตือนสำเร็จแล้วปิดโมดัล
+modalApply.onclick = () => {
+  alert("สมัครงานสำเร็จ");
+  closeModal();
+};
+
+modalSave.onclick = () => {
+  if (currentJobId == null) return;
+  state.bookmarks.has(currentJobId) ? state.bookmarks.delete(currentJobId) : state.bookmarks.add(currentJobId);
+  render();
+  closeModal();
+};
+
 
     /* Events */
     const refresh = () => render();
@@ -801,7 +821,14 @@
       document.getElementById("f-mode").value = ""; document.getElementById("f-category").value = ""; document.getElementById("f-salary").value = 0;
       document.getElementById("salaryVal").textContent = "0"; document.getElementById("matchSkills").checked = false; document.getElementById("sortBy").value = "relevance"; render();
     };
-    document.getElementById("quickApply").onclick = () => { if (state.selected.size === 0) { alert("เลือกงานอย่างน้อย 1 ตำแหน่งก่อนนะ"); return; } alert("Quick Apply (demo): สมัครงาน ID → " + [...state.selected].join(", ")); };
+    document.getElementById("quickApply").onclick = () => {
+  if (state.selected.size === 0) {
+    alert("เลือกงานอย่างน้อย 1 ตำแหน่งก่อนนะ");
+    return;
+  }
+  alert("เลือกตำแหน่งงานสำเร็จ");
+};
+
 
     window.addEventListener("DOMContentLoaded", render);
   </script>
